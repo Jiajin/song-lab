@@ -1,3 +1,4 @@
+//Re-initialize new instance of app
 const request = require("supertest");
 const express = require("express");
 
@@ -6,6 +7,8 @@ app.use(express.json());
 
 const songRouter = require("./songs.route");
 app.use("/songs", songRouter);
+
+//End re-initialization
 
 const song = {
   name: "testSongName",
@@ -56,5 +59,23 @@ describe("PUT /songs/:id", () => {
       .expect(200);
     expect(response.body.name).toEqual("testSongName");
     expect(response.body.artist).toEqual("testArtist");
+  });
+});
+
+describe("DELETE /songs/:id", () => {
+  it("should respond with the deleted song", async () => {
+    const tobeDelSong = { name: "toBeDelSong", artist: "toBeDelArtist" };
+    const addResponse = await request(app)
+      .post("/songs")
+      .send(tobeDelSong)
+      .expect(200);
+    // console.log(addResponse.body);
+
+    const response = await request(app)
+      .delete(`/songs/${addResponse.body.id}`)
+      //.delete("/songs/3")
+      .expect(200);
+    console.log(response.body);
+    expect(response.body).toMatchObject(tobeDelSong);
   });
 });
