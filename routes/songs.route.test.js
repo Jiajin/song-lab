@@ -15,7 +15,7 @@ const song = {
   artist: "testArtist",
 };
 
-describe("POST /songs", () => {
+describe.only("POST /songs", () => {
   it("should respond with one song", async () => {
     const response = await request(app).post("/songs").send(song).expect(200);
     expect(response.body.name).toEqual("testSongName");
@@ -80,7 +80,7 @@ describe("DELETE /songs/:id", () => {
   });
 });
 
-describe.only("Error handling PUT", () => {
+describe("Error handling PUT", () => {
   it("should test for error in PUT /songs:id", async () => {
     const response = await request(app)
       .put(`/songs/100`)
