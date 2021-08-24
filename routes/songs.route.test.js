@@ -79,3 +79,12 @@ describe("DELETE /songs/:id", () => {
     expect(response.body).toMatchObject(tobeDelSong);
   });
 });
+
+describe.only("Error handling PUT", () => {
+  it("should test for error in PUT /songs:id", async () => {
+    const response = await request(app)
+      .put(`/songs/100`)
+      .send(song)
+      .expect(400);
+  });
+});

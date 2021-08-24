@@ -37,15 +37,21 @@ router.get("/:id", (req, res) => {
 });
 
 //Put /:id
-router.put("/:id", (req, res) => {
+router.put("/:id", (req, res, next) => {
   let songIndex = songs.findIndex((song) => song.id === req.params.id);
-  let newSong = {
-    id: req.params.id,
-    name: req.body.name,
-    artist: req.body.artist,
-  };
-  songs[songIndex] = newSong;
-  res.send(newSong);
+  if (songIndex === -1) {
+    let err = new Error("Invalid Id");
+    err.statusCode = 400;
+    next(err);
+  } else {
+    let newSong = {
+      id: req.params.id,
+      name: req.body.name,
+      artist: req.body.artist,
+    };
+    songs[songIndex] = newSong;
+    res.send(newSong);
+  }
 });
 
 //Delete /:id
@@ -54,6 +60,13 @@ router.delete("/:id", (req, res) => {
   let deleteSong = songs[songIndex];
   songs.splice(songIndex, 1);
   res.status(200).send(deleteSong);
+});
+
+//ID not found error  handler
+router.use((err, req, res, next) => {
+  if (err.statusCode === 400) {
+    res.status(400).send(err.message);
+  } else next(err); //Other error scenario
 });
 
 module.exports = router;
