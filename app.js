@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const PORT = 3000;
 
 app.use(express.json());
 
@@ -17,7 +16,7 @@ const songs = [
   },
 ];
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Welcome to my homepage");
 });
 
 app.get("/songs", (req, res) => {
@@ -56,8 +55,7 @@ app.put("/songs/:id", (req, res) => {
 
 //Delete /songs/:id
 app.delete("/songs/:id", (req, res) => {
-  console.log(typeof req.params.id);
-  let songIndex = songs.findIndex((song) => song.id === req.params.id);
+  let songIndex = songs.findIndex((song) => song.id == req.params.id);
   let deleteSong = songs[songIndex];
   songs.splice(songIndex, 1);
   res.status(200).send(deleteSong);
